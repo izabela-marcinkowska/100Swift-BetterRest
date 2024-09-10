@@ -29,24 +29,28 @@ struct ContentView: View {
         NavigationStack {
             
             Form {
-                VStack(alignment: .leading, spacing: 0){
+                Section(header: Text("Wake up")){
                     
-                Text("When do you want to wake up?")
-                    .font(.headline)
-                DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
+                    Text("When do you want to wake up?")
+                        .font(.headline)
+                    DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
+                        .labelsHidden()
                 }
-                VStack(alignment: .leading, spacing: 0) {
+                Section(header: Text("amount of sleep")) {
                     
-                Text("Desired amount of sleep")
-                    .font(.headline)
-                Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
+                    Text("Desired amount of sleep")
+                        .font(.headline)
+                    Stepper("\(sleepAmount.formatted()) hours", value: $sleepAmount, in: 4...12, step: 0.25)
                 }
-                VStack(alignment: .leading, spacing: 0) {
+                Section(header: Text("Coffee")) {
                     
-                Text("Daily coffee intake")
-                    .font(.headline)
-                Stepper("^[\(coffeeAmount) cup](inflect: true)", value: $coffeeAmount, in: 1...20)
+                    Text("Daily coffee intake")
+                        .font(.headline)
+                    Picker("Amount coffee cups", selection: $coffeeAmount) {
+                        ForEach(0 ..< 21) {
+                            Text("\($0) cups")
+                        }
+                    }
                 }
             }
             .navigationTitle("BetterRest")
