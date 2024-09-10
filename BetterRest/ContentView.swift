@@ -15,9 +15,17 @@ struct ContentView: View {
         return Calendar.current.date(from: components) ?? .now
     }
     
+    static var defaultSleepTime: Date {
+        var components = DateComponents()
+        components.hour = 21
+        components.minute = 0
+        return Calendar.current.date(from: components) ?? .now
+    }
+    
     @State private var wakeUp = defaultWakeTime
     @State private var sleepAmount = 8.0
     @State private var coffeeAmount = 1
+    @State private var goToSleepTime = ""
     
     @State private var alertTitle = ""
     @State private var alertMessage = ""
@@ -52,16 +60,18 @@ struct ContentView: View {
                         }
                     }
                 }
+                Section(header: Text("Your ideal bedtime")) {
+                    Text(goToSleepTime)
+                        .onAppear() {
+                            calculateBedTime()
+                        }
+                }
+                .onChange(of: wakeUp) {calculateBedTime()}
+                .onChange(of: sleepAmount) {calculateBedTime()}
+                .onChange(of: coffeeAmount) {calculateBedTime()}
+                
             }
             .navigationTitle("BetterRest")
-            .toolbar{
-                Button("Calculate", action: calculateBedTime)
-            }
-            .alert(alertTitle, isPresented: $showingAlert) {
-                Button("OK") {}
-            } message: {
-                Text(alertMessage)
-            }
         }
     }
     func calculateBedTime() {
@@ -74,7 +84,7 @@ struct ContentView: View {
             let predition = try model.prediction(wake: Double(hour + minute), estimatedSleep: sleepAmount, coffee: Double(coffeeAmount))
             let sleepTime = wakeUp - predition.actualSleep
             alertTitle = "Your ideal bedtime is..."
-            alertMessage = sleepTime.formatted(date: .omitted, time: .shortened)
+            goToSleepTime = sleepTime.formatted(date: .omitted, time: .shortened)
         } catch {
             
         }
