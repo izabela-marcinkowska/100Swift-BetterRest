@@ -20,6 +20,12 @@ struct ContentView: View {
                 .font(.headline)
             DatePicker("Please enter a time", selection: $wakeUp, displayedComponents: .hourAndMinute)
                 .labelsHidden()
+            Text("Desired amount of sleep")
+                .font(.headline)
+            Stepper("\(sleepAmount.formatted())hours", value: $sleepAmount, in: 4...12, step: 0.25)
+            Text("Daily coffee intake")
+                .font(.headline)
+            Stepper("\(coffeeAmount) cup(s)", value: $coffeeAmount, in: 1...20)
         }
         .padding()
         }
